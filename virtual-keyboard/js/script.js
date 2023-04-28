@@ -22,7 +22,7 @@ const funcButtonClass = {
   ControlRight: "control-right",
 };
 
-const englishLower = [
+const enLower = [
   ["`", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", "Backspace"],
   ["Tab", "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "[", "]", "Del"],
   ["CapsLock", "a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "'", "\\", "Enter"],
@@ -30,11 +30,27 @@ const englishLower = [
   ["Ctrl", "Win", "Alt", " ", "Alt Gr", "◄", "▼", "►", "Ctrl"],
 ];
 
-const englishUpper = [
+const enUpper = [
   ["~", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "+", "Backspace"],
   ["Tab", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "{", "}", "Del"],
   ["CapsLock", "A", "S", "D", "F", "G", "H", "J", "K", "L", ":", "\"", "|", "Enter"],
   ["Shift", "|", "Z", "X", "C", "V", "B", "N", "M", "<", ">", "?", "▲", "Shift"],
+  ["Ctrl", "Win", "Alt", " ", "Alt Gr", "◄", "▼", "►", "Ctrl"],
+];
+
+const ruLower = [
+  ["ё", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", "Backspace"],
+  ["Tab", "й", "ц", "у", "к", "е", "н", "г", "ш", "щ", "з", "х", "ъ", "Del"],
+  ["CapsLock", "ф", "ы", "в", "а", "п", "р", "о", "л", "д", "ж", "э", "\\", "Enter"],
+  ["Shift", "\\", "я", "ч", "с", "м", "и", "т", "ь", "б", "ю", ".", "▲", "Shift"],
+  ["Ctrl", "Win", "Alt", " ", "Alt Gr", "◄", "▼", "►", "Ctrl"],
+];
+
+const ruUpper = [
+  ["Ё", "!", "\"", "№", ";", "%", ":", "?", "*", "(", ")", "_", "+", "Backspace"],
+  ["Tab", "Й", "Ц", "У", "К", "Е", "Н", "Г", "Ш", "Щ", "З", "Х", "Ъ", "Del"],
+  ["CapsLock", "Ф", "Ы", "В", "А", "П", "Р", "О", "Л", "Д", "Ж", "Э", "/", "Enter"],
+  ["Shift", "/", "Я", "Ч", "С", "М", "И", "Т", "Ь", "Б", "Ю", ",", "▲", "Shift"],
   ["Ctrl", "Win", "Alt", " ", "Alt Gr", "◄", "▼", "►", "Ctrl"],
 ];
 
@@ -52,18 +68,22 @@ keyboard.className = "keyboard";
 keyboard.id = "keyboard";
 
 let isCapsLock = false;
+let isShift = false;
+let isUpperCase = false;
+let isAltLeft = false;
+let lang = "en";
 
 body.appendChild(container);
 container.appendChild(textarea);
 container.appendChild(keyboard);
 
 
-for(let i = 0; i < englishLower.length; i++) {
+for(let i = 0; i < enLower.length; i++) {
   let keyboardRow = keyboard.appendChild(document.createElement("div"));
   keyboardRow.className = "keyboard__row";
-  for(let j = 0; j < englishLower[i].length; j++) {
+  for(let j = 0; j < enLower[i].length; j++) {
     let button = keyboardRow.appendChild(document.createElement("button"));
-    button.innerHTML = englishLower[i][j];
+    button.innerHTML = enLower[i][j];
     button.id = eventCode[i][j];
     button.className = "button";
     if (button.id in funcButtonClass) button.classList.add(funcButtonClass[button.id]);
@@ -86,9 +106,31 @@ function inputText(e) {
   	case "Enter":
   	  insertSymbol("\n", cursorPosition);
   	  break;
+  	case "CapsLock":
+  	  isCapsLock = !isCapsLock;
+  	  isUpperCase = !isUpperCase;
+      changeCase();
+      break;
+  	case "ShiftLeft":
+  	case "ShiftRight":
+      toggleShift(true);
+  	  break;
+  	case "AltLeft":
+  		if (isShift) {
+  		  if (lang === "en") {
+            lang = "ru";
+          } else {
+      	    lang = "en";
+          }
+        toggleShift(false);
+  		}
+  		break;
   	default:
       if (!(e.target.id in funcButtonClass) || (e.target.id === "Space")) {
         insertSymbol(e.target.innerHTML, cursorPosition);
+        if (isShift) {
+          toggleShift(false);
+        }
   	  }
   }
 }
@@ -111,27 +153,35 @@ function insertSymbol(symbol, position) {
   	    textarea.selectionEnd = position + symbol.length;
 }
 
-let capslock = document.querySelector("#CapsLock");
-capslock.addEventListener("click", toggleCapsLock);
-
-function toggleCapsLock() {
-  isCapsLock = !isCapsLock;
-  changeCase();
-}
-
 function changeCase() {
   let i = 0;
   let j = 0;
+  if (lang === "en") {
+    if (isUpperCase) {
+  	  arr = enUpper;
+    } else {
+  	  arr = enLower;
+    }
+  }
+  if (lang === "ru") {
+    if (isUpperCase) {
+  	  arr = ruUpper;
+    } else {
+      arr = ruLower;
+    }
+  }
   for (const el of keyboard.children) {
   	for (const keyS of el.children) {
-      if (isCapsLock) {
-      	keyS.innerHTML = englishUpper[i][j];
-      } else {
-        keyS.innerHTML = englishLower[i][j];
-      }
+      	keyS.innerHTML = arr[i][j];
       j++
     }
     j = 0;
     i++;
   }
+}
+
+function toggleShift(state) {
+  isShift = state;
+  isUpperCase = state;
+  changeCase();
 }
