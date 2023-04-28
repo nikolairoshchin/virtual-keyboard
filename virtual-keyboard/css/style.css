@@ -25,10 +25,17 @@
 .button {
   width: 40px;
   height: 40px;
+  border: 1px solid rgba(25, 99, 1, 0.2);
+  border-radius: 3px;
 }
 
 .button:hover {
-  background: #79aa89;
+  background: rgba(25, 99, 1, 0.2);
+}
+
+.active,
+.button:active {
+  background: rgba(25, 199, 1, 0.2);
 }
 
 .backspace,

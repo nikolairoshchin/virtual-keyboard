@@ -72,6 +72,7 @@ let isShift = false;
 let isUpperCase = false;
 let isAltLeft = false;
 let lang = "en";
+let shiftKey;
 
 body.appendChild(container);
 container.appendChild(textarea);
@@ -109,10 +110,12 @@ function inputText(e) {
   	case "CapsLock":
   	  isCapsLock = !isCapsLock;
   	  isUpperCase = !isUpperCase;
+  	  e.target.classList.toggle("active");
       changeCase();
       break;
   	case "ShiftLeft":
   	case "ShiftRight":
+  	  shiftKey = e.target;
       toggleShift(true);
   	  break;
   	case "AltLeft":
@@ -183,5 +186,10 @@ function changeCase() {
 function toggleShift(state) {
   isShift = state;
   isUpperCase = state;
+  if (state) {
+  	shiftKey.classList.add("active");
+  } else {
+    shiftKey.classList.remove("active");
+  }
   changeCase();
 }
