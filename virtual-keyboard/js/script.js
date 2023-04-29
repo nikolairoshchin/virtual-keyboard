@@ -84,13 +84,15 @@ for(let i = 0; i < enLower.length; i++) {
   keyboardRow.className = "keyboard__row";
   for(let j = 0; j < enLower[i].length; j++) {
     let button = keyboardRow.appendChild(document.createElement("button"));
-    button.innerHTML = enLower[i][j];
+    button.textContent = enLower[i][j];
     button.id = eventCode[i][j];
     button.className = "button";
     if (button.id in funcButtonClass) button.classList.add(funcButtonClass[button.id]);
     button.addEventListener('click', inputText);
   }
 }
+
+textarea.focus();
 
 function inputText(e) {
   let cursorPosition = textarea.selectionStart;
@@ -109,7 +111,7 @@ function inputText(e) {
   	  break;
   	case "CapsLock":
   	  isCapsLock = !isCapsLock;
-  	  isUpperCase = !isUpperCase;
+  	  if (!isShift) isUpperCase = !isUpperCase;
   	  e.target.classList.toggle("active");
       changeCase();
       break;
@@ -130,7 +132,7 @@ function inputText(e) {
   		break;
   	default:
       if (!(e.target.id in funcButtonClass) || (e.target.id === "Space")) {
-        insertSymbol(e.target.innerHTML, cursorPosition);
+        insertSymbol(e.target.textContent, cursorPosition);
         if (isShift) {
           toggleShift(false);
         }
@@ -175,7 +177,7 @@ function changeCase() {
   }
   for (const el of keyboard.children) {
   	for (const keyS of el.children) {
-      	keyS.innerHTML = arr[i][j];
+      	keyS.textContent = arr[i][j];
       j++
     }
     j = 0;
@@ -185,11 +187,72 @@ function changeCase() {
 
 function toggleShift(state) {
   isShift = state;
-  isUpperCase = state;
+  if (!isCapsLock) isUpperCase = state;
   if (state) {
   	shiftKey.classList.add("active");
   } else {
     shiftKey.classList.remove("active");
   }
   changeCase();
+}
+
+document.onkeydown = handleDown;
+document.onkeyup = handleUp;
+
+function handleDown(e) {
+  textarea.focus();
+  let cursorPosition = textarea.selectionStart;
+  let screenCode = document.querySelector(`#${e.code}`);
+  screenCode.classList.add("active");
+  switch (screenCode.id) {
+  	case "Tab":
+  	  e.preventDefault();
+  	  insertSymbol("    ", cursorPosition);
+  	  break;
+  	case "CapsLock":
+  	  isCapsLock = !isCapsLock;
+  	  if (!isShift) isUpperCase = !isUpperCase;
+  	  if (isCapsLock) {
+  	  	screenCode.classList.add("active");
+  	  } else {
+  	  	screenCode.classList.remove("active");
+  	  }
+      changeCase();
+      break;
+  	case "ShiftLeft":
+  	case "ShiftRight":
+  	  shiftKey = screenCode;
+      toggleShift(true);
+  	  break;
+  	case "AltLeft":
+  		if (isShift) {
+  		  if (lang === "en") {
+            lang = "ru";
+          } else {
+      	    lang = "en";
+          }
+        toggleShift(false);
+  	    }
+  	    break;
+  	default:
+      if (!(screenCode.id in funcButtonClass) || (screenCode.id === "Space")) {
+      	e.preventDefault();
+        insertSymbol(screenCode.textContent, cursorPosition);
+        }
+  	}
+}
+
+function handleUp(e) {
+  let screenCode = document.querySelector(`#${e.code}`);
+  switch (screenCode.id) {
+  	case "CapsLock":
+      break;
+  	case "ShiftLeft":
+  	case "ShiftRight":
+  	  shiftKey = screenCode;
+      toggleShift(false);
+  	  break;
+  	default:
+  	  screenCode.classList.remove("active");
+  	}
 }
