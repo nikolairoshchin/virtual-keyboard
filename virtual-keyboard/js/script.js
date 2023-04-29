@@ -54,6 +54,24 @@ const ruUpper = [
   ["Ctrl", "Win", "Alt", " ", "Alt Gr", "◄", "▼", "►", "Ctrl"],
 ];
 
+let lang = getLocalStorage();
+
+function setLocalStorage() {
+  localStorage.setItem('lang', lang);
+}
+window.addEventListener('beforeunload', setLocalStorage);
+
+function getLocalStorage() {
+  let language = "en";
+  if (!localStorage.getItem('lang')) {
+    language = "en";
+  } else {
+    language = localStorage.getItem('lang');
+  }
+  return language;
+}
+window.addEventListener('load', getLocalStorage);
+
 let body = document.querySelector("body");
 let container = document.createElement("div");
 container.className = "container";
@@ -71,8 +89,8 @@ let isCapsLock = false;
 let isShift = false;
 let isUpperCase = false;
 let isAltLeft = false;
-let lang = "en";
 let shiftKey;
+let arr = [];
 
 body.appendChild(container);
 container.appendChild(textarea);
@@ -84,7 +102,12 @@ for(let i = 0; i < enLower.length; i++) {
   keyboardRow.className = "keyboard__row";
   for(let j = 0; j < enLower[i].length; j++) {
     let button = keyboardRow.appendChild(document.createElement("button"));
-    button.textContent = enLower[i][j];
+    if (lang === "en") {
+      arr = enLower;
+    } else {
+      arr = ruLower;
+    }
+    button.textContent = arr[i][j];
     button.id = eventCode[i][j];
     button.className = "button";
     if (button.id in funcButtonClass) button.classList.add(funcButtonClass[button.id]);
