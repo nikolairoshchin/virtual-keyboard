@@ -28,6 +28,7 @@
   height: 40px;
   border: 1px solid rgba(25, 99, 1, 0.2);
   border-radius: 3px;
+  transition: all 0.3s;
 }
 
 .button:hover {
@@ -36,7 +37,8 @@
 
 .active,
 .button:active {
-  background: rgba(25, 199, 1, 0.2);
+  background: rgba(25, 209, 1, 0.2);
+  transform: scale(1.1);
 }
 
 .backspace,

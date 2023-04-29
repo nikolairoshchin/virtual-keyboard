@@ -118,7 +118,8 @@ function inputText(e) {
   	case "ShiftLeft":
   	case "ShiftRight":
   	  shiftKey = e.target;
-      toggleShift(true);
+  	  isShift = !isShift;
+      toggleShift(isShift);
   	  break;
   	case "AltLeft":
   		if (isShift) {
