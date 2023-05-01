@@ -91,8 +91,15 @@ let shiftKey;
 let arr = [];
 
 let footer = document.createElement("footer");
-footer.innerHTML = "Клавиатура создана в операционной системе Windows.<br> Для переключения языка комбинация: левые Shift + Alt";
 footer.className = "footer";
+
+function switchDescription() {
+  if (lang === "en") {
+    footer.innerHTML = "Keyboard was developed in Windows OS. <br> For switching keyboard layout: Left Shift + Left Alt";
+  } else {
+    footer.innerHTML = "Клавиатура создана в операционной системе Windows.<br> Для переключения языка комбинация: левые Shift + Alt";
+  }
+}
 
 body.appendChild(container);
 container.appendChild(textarea);
@@ -119,6 +126,7 @@ for(let i = 0; i < enLower.length; i++) {
 }
 
 textarea.focus();
+switchDescription();
 
 function inputText(e) {
   let cursorPosition = textarea.selectionStart;
@@ -221,6 +229,7 @@ function toggleShift(state) {
     shiftKey.classList.remove("active");
   }
   changeCase();
+  switchDescription();
 }
 
 document.onkeydown = handleDown;
