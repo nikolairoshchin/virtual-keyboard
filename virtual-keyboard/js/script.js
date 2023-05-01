@@ -63,9 +63,7 @@ window.addEventListener('beforeunload', setLocalStorage);
 
 function getLocalStorage() {
   let language = "en";
-  if (!localStorage.getItem('lang')) {
-    language = "en";
-  } else {
+  if (localStorage.getItem('lang')) {
     language = localStorage.getItem('lang');
   }
   return language;
@@ -92,9 +90,14 @@ let isAltLeft = false;
 let shiftKey;
 let arr = [];
 
+let footer = document.createElement("footer");
+footer.innerHTML = "Клавиатура создана в операционной системе Windows.<br> Для переключения языка комбинация: левые Shift + Alt";
+footer.className = "footer";
+
 body.appendChild(container);
 container.appendChild(textarea);
 container.appendChild(keyboard);
+container.appendChild(footer);
 
 
 for(let i = 0; i < enLower.length; i++) {
