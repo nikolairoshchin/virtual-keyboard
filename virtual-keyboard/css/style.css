@@ -1,0 +1,68 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+}
+
+.textarea {
+  display: block;
+  width: 700px;
+  height: 200px;
+}
+
+.keyboard {
+  display: flex;
+  flex-direction: column;
+  width: 700px;
+  gap: 8px;
+}
+
+.keyboard__row {
+  display: flex;
+  gap: 6px;
+}
+
+.button {
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(25, 99, 1, 0.2);
+  border-radius: 3px;
+  transition: all 0.3s;
+}
+
+.button:hover {
+  background: rgba(25, 99, 1, 0.2);
+}
+
+.active,
+.button:active {
+  background: rgba(25, 209, 1, 0.2);
+  transform: scale(1.1);
+}
+
+.backspace,
+.tab,
+.del,
+.capslock,
+.shift-left,
+.enter,
+.space {
+  flex-grow: 5;
+}
+
+.backspace {
+  width: 100px;
+}
+
+.shift-right {
+  width: 86px;
+}
+
+.footer {
+  width: 700px;
+  font-family: "Helvetica", sans-serif;
+  text-align: center;
+  line-height: 1.5;
+}
